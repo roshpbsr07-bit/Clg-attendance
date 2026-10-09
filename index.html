@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Attendance Management System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fc;
+    color: #172b4d;
+}
+
+.app {
+    width: 96%;
+    max-width: 1440px;
+    min-height: 90vh;
+    margin: 15px auto;
+    display: grid;
+    grid-template-columns: 285px 1fr;
+    border: 1px solid #83a9df;
+    background: white;
+}
+
+header {
+    grid-column: 1 / -1;
+    padding: 22px 12px;
+    text-align: center;
+    background: #dce9ff;
+    border-bottom: 3px solid #172b4d;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+    font-style: italic;
+}
+
+.sidebar {
+    padding: 18px 14px;
+    background: #ffd0d0;
+    border-right: 2px solid #172b4d;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #172b4d;
+    font-style: italic;
+}
+
+nav {
+    display: grid;
+    gap: 12px;
+}
+
+nav button {
+    padding: 16px 10px;
+    text-align: left;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: #172b4d;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+nav button:hover,
+nav button.active {
+    background: #fff0f0;
+    border-color: #e5a5a5;
+}
+
+main {
+    min-width: 0;
+    padding: 25px;
+    background: #f8fbff;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 125px;
+    padding: 20px;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.total-card {
+    background: #e9def0;
+    border-color: #b79acb;
+}
+
+.present-card {
+    background: #d9f0df;
+    border-color: #7cbd91;
+}
+
+.card-icon {
+    font-size: 35px;
+}
+
+.card p {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.card strong {
+    font-size: 30px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #7d91aa;
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    margin: 0;
+    padding: 17px 20px;
+    background: #edf1f6;
+    border-bottom: 3px solid #172b4d;
+    font-size: 21px;
+    font-style: italic;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th, td {
+    padding: 15px 10px;
+    border: 1px solid #b8c6d8;
+}
+
+th {
+    background: #edf1f6;
+}
+
+.status {
+    display: inline-block;
+    min-width: 75px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.status.Present {
+    color: #176a35;
+    background: #d4f1dc;
+    border: 1px solid #8cc99d;
+}
+
+.status.Absent {
+    color: #8d2525;
+    background: #ffd8d8;
+    border: 1px solid #e9a0a0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+button, input {
+    font: inherit;
+}
+
+.action-buttons button,
+.primary-button {
+    padding: 8px 10px;
+    border: 1px solid #83a9df;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.set-present, .primary-button {
+    background: #dce9ff;
+}
+
+.set-absent {
+    background: #ffe4e4;
+    border-color: #e9a0a0 !important;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+    padding: 20px;
+}
+
+form label {
+    display: grid;
+    gap: 7px;
+    font-weight: bold;
+}
+
+form input {
+    padding: 10px;
+    border: 1px solid #9aabc0;
+    border-radius: 4px;
+}
+
+.report-content {
+    padding: 20px;
+    line-height: 1.8;
+}
+
+.hint {
+    padding: 0 18px 15px;
+    color: #526174;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 12px;
+    color: #526174;
+}
+
+@media (max-width: 800px) {
+    .app {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        grid-column: 1;
+    }
+
+    .sidebar {
+        border-right: 0;
+        border-bottom: 2px solid #172b4d;
+    }
+
+    nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: 14px;
+    }
+}
+
+@media (max-width: 450px) {
+    nav {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 19px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <h1>COLLEGE ATTENDANCE MANAGEMENT SYSTEM</h1>
+</header>
+
+<aside class="sidebar">
+    <h2>MENU</h2>
+    <nav>
+        <button class="active" data-view="dashboard">🏠 Dashboard</button>
+        <button data-view="students">👩‍🎓 Students</button>
+        <button data-view="attendance">🗓️ Attendance</button>
+        <button data-view="reports">📊 Reports</button>
+    </nav>
+</aside>
+
+<main>
+
+<section class="cards">
+    <div class="card total-card">
+        <div class="card-icon">👩‍🎓</div>
+        <div>
+            <p>Total Students</p>
+            <strong id="totalStudents">4</strong>
+        </div>
+    </div>
+
+    <div class="card present-card">
+        <div class="card-icon">✓</div>
+        <div>
+            <p>Present Today</p>
+            <strong id="presentCount">2</strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel view" id="dashboard">
+    <h2>STUDENT ATTENDANCE</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll No.</th>
+                    <th>Status</th>
+                    <th>Update Attendance</th>
+                </tr>
+            </thead>
+            <tbody id="studentRows"></tbody>
+        </table>
+    </div>
+    <p class="hint">Use the buttons to mark each student Present or Absent.</p>
+</section>
+
+<section class="panel view hidden" id="students">
+    <h2>ADD STUDENT</h2>
+    <form id="addStudentForm">
+        <label>
+            Student Name
+            <input id="studentName" type="text" required maxlength="60"
+                   placeholder="Enter student name">
+        </label>
+        <label>
+            Roll Number
+            <input id="rollNumber" type="text" required maxlength="20"
+                   placeholder="Enter roll number">
+        </label>
+        <button class="primary-button" type="submit">Add Student</button>
+    </form>
+    <p class="hint">Each roll number must be unique. New students start as Absent.</p>
+</section>
+
+<section class="panel view hidden" id="attendance">
+    <h2>ATTENDANCE MANAGEMENT</h2>
+    <div class="report-content">
+        <p>Update attendance using the Present and Absent buttons in the dashboard.</p>
+        <button class="primary-button" id="markAllAbsent">Mark Everyone Absent</button>
+    </div>
+</section>
+
+<section class="panel view hidden" id="reports">
+    <h2>ATTENDANCE REPORT</h2>
+    <div class="report-content">
+        <p>Total Students: <strong id="reportTotal">4</strong></p>
+        <p>Present: <strong id="reportPresent">2</strong></p>
+        <p>Absent: <strong id="reportAbsent">2</strong></p>
+        <p>Attendance Percentage: <strong id="percentage">50%</strong></p>
+        <button class="primary-button" id="downloadReport">
+            Download CSV Report
+        </button>
+    </div>
+</section>
+
+</main>
+</div>
+
+<footer>College Attendance Management System | Student Project</footer>
+
+<script>
+const students = [
+    { name: "Arun", roll: "101", status: "Absent" },
+    { name: "Priya", roll: "102", status: "Present" },
+    { name: "Ravi", roll: "103", status: "Absent" },
+    { name: "Maya", roll: "104", status: "Present" }
+];
+
+const studentRows = document.getElementById("studentRows");
+
+function renderStudents() {
+    studentRows.innerHTML = "";
+
+    students.forEach((student, index) => {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = student.name;
+
+        const rollCell = document.createElement("td");
+        rollCell.textContent = student.roll;
+
+        const statusCell = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = "status " + student.status;
+        badge.textContent = student.status;
+        statusCell.appendChild(badge);
+
+        const actionsCell = document.createElement("td");
+        actionsCell.className = "action-buttons";
+
+        const presentButton = document.createElement("button");
+        presentButton.className = "set-present";
+        presentButton.textContent = "Present";
+        presentButton.type = "button";
+        presentButton.addEventListener("click", () => {
+            updateStatus(index, "Present");
+        });
+
+        const absentButton = document.createElement("button");
+        absentButton.className = "set-absent";
+        absentButton.textContent = "Absent";
+        absentButton.type = "button";
+        absentButton.addEventListener("click", () => {
+            updateStatus(index, "Absent");
+        });
+
+        actionsCell.append(presentButton, absentButton);
+        row.append(nameCell, rollCell, statusCell, actionsCell);
+        studentRows.appendChild(row);
+    });
+
+    updateSummary();
+}
+
+function updateStatus(index, status) {
+    students[index].status = status;
+    renderStudents();
+}
+
+function updateSummary() {
+    const total = students.length;
+    const present = students.filter(s => s.status === "Present").length;
+    const absent = total - present;
+    const percentage = total === 0
+        ? 0
+        : Math.round((present / total) * 100);
+
+    document.getElementById("totalStudents").textContent = total;
+    document.getElementById("presentCount").textContent = present;
+    document.getElementById("reportTotal").textContent = total;
+    document.getElementById("reportPresent").textContent = present;
+    document.getElementById("reportAbsent").textContent = absent;
+    document.getElementById("percentage").textContent = percentage + "%";
+}
+
+document.querySelectorAll("[data-view]").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll("[data-view]").forEach(item => {
+            item.classList.remove("active");
+        });
+        button.classList.add("active");
+
+        document.querySelectorAll(".view").forEach(section => {
+            section.classList.add("hidden");
+        });
+
+        document.getElementById(button.dataset.view).classList.remove("hidden");
+    });
+});
+
+document.getElementById("addStudentForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const nameInput = document.getElementById("studentName");
+    const rollInput = document.getElementById("rollNumber");
+    const name = nameInput.value.trim();
+    const roll = rollInput.value.trim();
+
+    if (students.some(s => s.roll.toLowerCase() === roll.toLowerCase())) {
+        alert("This roll number already exists. Please enter a unique one.");
+        rollInput.focus();
+        return;
+    }
+
+    students.push({ name, roll, status: "Absent" });
+    renderStudents();
+    event.target.reset();
+    alert("Student added successfully!");
+});
+
+document.getElementById("markAllAbsent").addEventListener("click", () => {
+    students.forEach(student => {
+        student.status = "Absent";
+    });
+    renderStudents();
+});
+
+document.getElementById("downloadReport").addEventListener("click", () => {
+    const rows = [
+        ["Student Name", "Roll No.", "Status"],
+        ...students.map(s => [s.name, s.roll, s.status])
+    ];
+
+    const csv = rows.map(row =>
+        row.map(value =>
+            '"' + String(value).replace(/"/g, '""') + '"'
+        ).join(",")
+    ).join("\r\n");
+
+    const blob = new Blob([csv], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "attendance-report.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+});
+
+renderStudents();
+</script>
+
+</body>
+</html>
