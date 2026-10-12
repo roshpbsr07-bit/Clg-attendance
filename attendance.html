@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Attendance System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f4f8;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #243b64;
+        }
+
+        table {
+            margin: auto;
+            width: 90%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background: #243b64;
+            color: white;
+        }
+
+        button {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .present {
+            background: #28a745;
+            color: white;
+        }
+
+        .absent {
+            background: #dc3545;
+            color: white;
+        }
+
+        #add {
+            background: #243b64;
+            color: white;
+            margin: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>College Attendance Management System</h1>
+<p>Student Attendance Dashboard</p>
+
+<h3>Total Students: <span id="total">3</span></h3>
+<h3>Present: <span id="p">0</span></h3>
+<h3>Absent: <span id="a">0</span></h3>
+<h3>Attendance Percentage: <span id="percent">0%</span></h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Roll Number</th>
+            <th>Student Name</th>
+            <th>Attendance</th>
+        </tr>
+    </thead>
+    <tbody id="students">
+        <tr>
+            <td>101</td>
+            <td>Arun Kumar</td>
+            <td>
+                <button class="present" onclick="mark(this,'Present')">Present</button>
+                <button class="absent" onclick="mark(this,'Absent')">Absent</button>
+            </td>
+        </tr>
+        <tr>
+            <td>102</td>
+            <td>Priya</td>
+            <td>
+                <button class="present" onclick="mark(this,'Present')">Present</button>
+                <button class="absent" onclick="mark(this,'Absent')">Absent</button>
+            </td>
+        </tr>
+        <tr>
+            <td>103</td>
+            <td>Rahul</td>
+            <td>
+                <button class="present" onclick="mark(this,'Present')">Present</button>
+                <button class="absent" onclick="mark(this,'Absent')">Absent</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<button id="add" onclick="addStudent()">Add Student</button>
+
+<script>
+    function update() {
+        let rows = document.querySelectorAll("#students tr");
+        let present = 0, absent = 0;
+
+        rows.forEach(row => {
+            if (row.dataset.status === "Present") present++;
+            if (row.dataset.status === "Absent") absent++;
+        });
+
+        document.getElementById("total").textContent = rows.length;
+        document.getElementById("p").textContent = present;
+        document.getElementById("a").textContent = absent;
+
+        let percentage = present + absent === 0
+            ? 0
+            : Math.round(present / (present + absent) * 100);
+
+        document.getElementById("percent").textContent =
+            percentage + "%";
+    }
+
+    function mark(button, status) {
+        let row = button.closest("tr");
+        row.dataset.status = status;
+        row.style.background =
+            status === "Present" ? "#e0f5e5" : "#ffe3e3";
+        update();
+    }
+
+    function addStudent() {
+        let name = prompt("Enter student name:");
+        if (!name || !name.trim()) return;
+
+        let roll = prompt("Enter roll number:");
+        if (!roll || !roll.trim()) return;
+
+        let row = document.createElement("tr");
+        let rollCell = document.createElement("td");
+        let nameCell = document.createElement("td");
+        let actionCell = document.createElement("td");
+
+        rollCell.textContent = roll.trim();
+        nameCell.textContent = name.trim();
+
+        let presentBtn = document.createElement("button");
+        presentBtn.textContent = "Present";
+        presentBtn.className = "present";
+        presentBtn.onclick = function() {
+            mark(this, "Present");
+        };
+
+        let absentBtn = document.createElement("button");
+        absentBtn.textContent = "Absent";
+        absentBtn.className = "absent";
+        absentBtn.onclick = function() {
+            mark(this, "Absent");
+        };
+
+        actionCell.append(presentBtn, absentBtn);
+        row.append(rollCell, nameCell, actionCell);
+        document.getElementById("students").appendChild(row);
+        update();
+    }
+
+    update();
+</script>
+
+</body>
+</html>
